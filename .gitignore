@@ -1,3 +1,10 @@
+Deep-Opt/todo.txt 
+Deep-Opt/Models/__pycache__/
+Deep-Opt/COProblems/__pycache__/
+Deep-Opt/__pycache__/
+Deep-Opt/Graphs/
+Deep-Opt/.DS_Store
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
