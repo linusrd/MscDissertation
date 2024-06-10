@@ -4,6 +4,8 @@ Deep-Opt/COProblems/__pycache__/
 Deep-Opt/__pycache__/
 Deep-Opt/Graphs/
 Deep-Opt/.DS_Store
+data/.DS_Store
+.DS_Store
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
