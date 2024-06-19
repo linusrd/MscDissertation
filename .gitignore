@@ -6,6 +6,7 @@ Deep-Opt/Graphs/
 Deep-Opt/.DS_Store
 data/.DS_Store
 .DS_Store
+notebooks/wandb/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
