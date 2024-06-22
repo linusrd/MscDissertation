@@ -1,7 +1,5 @@
 from abc import abstractmethod, ABC
-
 import torch
-
 from COProblems.OptimisationProblem import OptimisationProblem
 from Models.DOBase import DOBase
 
@@ -10,7 +8,7 @@ class OptimHandler(ABC):
     Abstract class to handle the DO algorithm, given a model and a problem. Each handler
     is specific to the model as different model types may require slightly different algorithms.
     """
-    def __init__(self, model : DOBase, problem : OptimisationProblem, device: torch.device):
+    def __init__(self, model: DOBase, problem: OptimisationProblem, device: torch.device):
         """
         Constructor method for the OptimHandler class.
 
@@ -67,7 +65,7 @@ class OptimHandler(ABC):
             is a global optima.
         """
         pass 
-    
+
     @torch.no_grad()
     def assess_changes(self, solutions: torch.Tensor, fitnesses: torch.Tensor,
                        new_solutions: torch.Tensor, change_tolerance: int,
@@ -139,12 +137,95 @@ class OptimHandler(ABC):
         while True:
             new_solutions = solutions.clone().detach()
             # Select which bits to flip
-            i = torch.randint(0,new_solutions.shape[1], (new_solutions.shape[0],))
+            i = torch.randint(0, new_solutions.shape[1], (new_solutions.shape[0],))
             # Flips the selected bits
-            new_solutions[torch.arange(new_solutions.shape[0]),i] *= -1
+            new_solutions[torch.arange(new_solutions.shape[0]), i] *= -1
 
             evaluations = self.assess_changes(solutions, fitnesses, new_solutions, change_tolerance,
                                               last_improve)
+            total_evals += evaluations
+            if torch.any(fitnesses == self.problem.max_fitness): 
+                return (solutions, fitnesses, total_evals, True)
+            if torch.all(last_improve > change_tolerance):
+                return (solutions, fitnesses, total_evals, False)
+
+    @torch.no_grad()
+    def assess_changes_descent(self, solutions: torch.Tensor, fitnesses: torch.Tensor,
+                               new_solutions: torch.Tensor, change_tolerance: int,
+                               last_improve: torch.Tensor) -> int:
+        """
+        Determines which changes to solutions are negative and neutral and should be kept, and 
+        which changes are positive and should be discarded. Solutions and fitnesses are modified
+        in-place during this process.
+
+        Args:
+            solutions: torch.Tensor
+                The current solutions. Has shape N x W, where N is the number of solutions
+                in the population and W is the size of each solution.
+            fitnesses: torch.Tensor
+                The list of fitnesses relating to each solution. Has shape N, where the ith fitness
+                corresponds to the ith solution in the solutions tensor.
+            new_solutions: torch.Tensor
+                The new proposed solutions after Model-Informed Variation has been applied.
+            change_tolerance: int
+                Defines how many neutral or positive fitness changes can be made in a row before a 
+                solution is deemed an optima during the optimisation process.
+            last_improve: torch.Tensor
+                A list of numbers containing how many attempts have been made at making a change to 
+                each solution without encountering a negative change. If the ith element is greater
+                than change_tolerance, no more changes shall be made to the ith solution. Has shape N.
+        
+        Returns:
+            The number of evaluations that have been made during this function call. Solutions, fitnesses, and 
+            last_improve get modified in-place.
+        """
+        active = last_improve <= change_tolerance
+        new_fitnesses = torch.full(fitnesses.shape, float('inf'), device=self.device)
+        new_fitnesses[active] = self.problem.fitness(new_solutions[active])
+        evaluations = new_solutions[active].shape[0]  
+
+        last_improve[new_fitnesses >= fitnesses] += 1
+        last_improve[new_fitnesses < fitnesses] = 0
+        
+        changed_fitnesses = new_fitnesses <= fitnesses
+        solutions[changed_fitnesses] = new_solutions[changed_fitnesses]
+        fitnesses[changed_fitnesses] = new_fitnesses[changed_fitnesses]
+
+        return evaluations
+
+    @torch.no_grad() 
+    def hilldescent(self, solutions: torch.Tensor, fitnesses: torch.Tensor,
+                    change_tolerance: int) -> tuple[torch.Tensor, torch.Tensor, int, bool]:
+        """
+        Locally optimises solutions using a bit-substitution hill descender.
+
+        Args:
+            solutions: torch.Tensor
+                The current solutions. Has shape N x W, where N is the number of solutions
+                in the population and W is the size of each solution.
+            fitnesses: torch.Tensor
+                The list of fitnesses relating to each solution. Has shape N, where the ith fitness
+                corresponds to the ith solution in the solutions tensor.
+            change_tolerance: int
+                Defines how many neutral or positive fitness changes can be made in a row before a 
+                solution is deemed an optima during the optimisation process.
+            
+        Returns:
+            A tuple containing the optimised solutions, their respective fitnesses, the number of
+            evaluations used during the process, and a boolean that is true if one of the solutions
+            is a global optima (if the global optima is known).
+        """
+        last_improve = torch.zeros_like(fitnesses).to(self.device)
+        total_evals = 0
+        while True:
+            new_solutions = solutions.clone().detach()
+            # Select which bits to flip
+            i = torch.randint(0, new_solutions.shape[1], (new_solutions.shape[0],))
+            # Flips the selected bits
+            new_solutions[torch.arange(new_solutions.shape[0]), i] *= -1
+
+            evaluations = self.assess_changes_descent(solutions, fitnesses, new_solutions, change_tolerance,
+                                                      last_improve)
             total_evals += evaluations
             if torch.any(fitnesses == self.problem.max_fitness): 
                 return (solutions, fitnesses, total_evals, True)
@@ -178,4 +259,17 @@ class OptimHandler(ABC):
         mean_f = torch.mean(fitnesses).item()  
         max_f = torch.max(fitnesses).item()
 
-        print("Max pop fitness: {}, Mean pop fitness : {}".format(max_f, mean_f))     
+        print("Max pop fitness: {}, Mean pop fitness : {}".format(max_f, mean_f))
+
+    def print_statistics_min(self, fitnesses: torch.tensor):
+        """
+        Prints basic statistics about the fitnesses of a population.
+
+        Args:
+            fitnesses: torch.Tensor
+                The fitnesses of the population.
+        """
+        mean_f = torch.mean(fitnesses).item()  
+        min_f = torch.min(fitnesses).item()
+
+        print("Min pop fitness: {}, Mean pop fitness : {}".format(min_f, mean_f))
