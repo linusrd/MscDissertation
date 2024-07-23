@@ -23,8 +23,9 @@ class QUBO(OptimisationProblem):
         self.Q = QUBO_populate_function.QUBOpopulate(file, id)
         self.Q = self.Q.to(dtype=torch.float32, device=device)
         super().__init__(device)
+        self.jobs = {}
 
-    def fitness(self, x: torch.Tensor) -> torch.Tensor:
+    def fitness(self, x: torch.Tensor, check_constraints: bool, penalty_mult: int) -> torch.Tensor:
         """
         Calculate the fitness of any assignment of items.
 
@@ -39,7 +40,49 @@ class QUBO(OptimisationProblem):
         x = (x + 1) / 2
         mul1 = x.matmul(self.Q)
         mul2 = (mul1 * x).sum(dim=1)
-        return mul2
+        
+        if check_constraints:
+            # Calculate penalties
+            penalties = self.calculate_penalties(x)
+            
+            # Incorporate penalties into fitness
+            fitness = mul2 + (penalty_mult*penalties) #arbitrary constant
+            return fitness
+        else:
+            return mul2
+    
+    def calculate_penalties(self, x: torch.Tensor) -> torch.Tensor:
+        """
+        Calculate the penalties for constraint violations.
+
+        Args:
+            x: torch.Tensor
+                The solutions to check for constraint violations.
+        
+        Returns:
+            penalties: torch.Tensor
+                Penalties for each solution. Shape N.
+        """
+        penalties = torch.zeros(x.size(0), device=self.device)
+        for i, solution in enumerate(x):
+            machine_jobs = [[], []]
+            makespans = [0, 0]
+            
+            for job_index, job_assignment in enumerate(solution):
+                machine = int(job_assignment)
+                job_key = job_index + 1
+                job = self.jobs[job_key]
+                machine_jobs[machine].append((job_key, job))
+            
+            for machine, assigned_jobs in enumerate(machine_jobs):
+                current_time = 0
+                for job_key, job in sorted(assigned_jobs, key=lambda x: (x[1]['deadline'], x[1]['release'])):
+                    if current_time < job['release']:
+                        current_time = job['release']
+                    current_time += job['duration']
+                    if current_time > job['deadline']:
+                        penalties[i] += 1  # Increment penalty for each violation
+        return penalties
     
     def is_valid(self, x: torch.Tensor) -> torch.Tensor:
         """

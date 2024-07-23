@@ -63,7 +63,7 @@ class OptimAEHandler(OptimHandler):
     @torch.no_grad()
     def optimise_solutions(self, solutions: torch.Tensor, fitnesses: torch.Tensor,
                            change_tolerance : int, encode: bool=False,
-                           repair_solutions: bool=False, deepest_only: bool=False, jobs=None, check_constraints=False) -> tuple[torch.Tensor, torch.Tensor, int, bool]:
+                           repair_solutions: bool=False, deepest_only: bool=False, check_constraints: bool=False, penalty_mult: int=5) -> tuple[torch.Tensor, torch.Tensor, int, bool]:
         """
         Optimises the solutions using Model-Informed Variation. 
 
@@ -105,7 +105,7 @@ class OptimAEHandler(OptimHandler):
                 if repair_solutions:
                     new_solutions = self.problem.repair(new_solutions)
                 evaluations += self.assess_changes(solutions, fitnesses, new_solutions,
-                                                   change_tolerance, last_improve, jobs, check_constraints)
+                                                   change_tolerance, last_improve, check_constraints, penalty_mult)
                 if torch.any(fitnesses == self.problem.max_fitness): 
                     return (solutions, fitnesses, evaluations, True)
                 if torch.all(last_improve > change_tolerance):
@@ -116,7 +116,7 @@ class OptimAEHandler(OptimHandler):
     @torch.no_grad()
     def optimise_solutions_min(self, solutions: torch.Tensor, fitnesses: torch.Tensor,
                            change_tolerance : int, encode: bool=False,
-                           repair_solutions: bool=False, deepest_only: bool=False, jobs=None, check_constraints=False) -> tuple[torch.Tensor, torch.Tensor, int, bool]:
+                           repair_solutions: bool=False, deepest_only: bool=False, check_constraints: bool=False, penalty_mult: int=5) -> tuple[torch.Tensor, torch.Tensor, int, bool]:
         """
         Optimises the solutions using Model-Informed Variation. 
 
@@ -158,7 +158,7 @@ class OptimAEHandler(OptimHandler):
                 if repair_solutions:
                     new_solutions = self.problem.repair(new_solutions)
                 evaluations += self.assess_changes_descent(solutions, fitnesses, new_solutions,
-                                                   change_tolerance, last_improve, jobs, check_constraints)
+                                                   change_tolerance, last_improve, check_constraints, penalty_mult)
                 if torch.any(fitnesses == self.problem.max_fitness): 
                     return (solutions, fitnesses, evaluations, True)
                 if torch.all(last_improve > change_tolerance):

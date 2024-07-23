@@ -64,49 +64,12 @@ class OptimHandler(ABC):
             evaluations used during the process, and a boolean that is true if one of the solutions
             is a global optima.
         """
-        pass
-
-    @torch.no_grad()
-    def check_constraints(self, solutions: torch.Tensor, jobs) -> torch.Tensor:
-        """
-        Checks constraints and returns penalties for each solution.
-        
-        Args:
-            solutions: torch.Tensor
-                The solutions to check. Has shape N x W, where N is the number of solutions
-                in the population and W is the size of each solution.
-            jobs: dict
-                Dictionary containing job details.
-
-        Returns:
-            penalties: torch.Tensor
-                Penalties for each solution. Shape N.
-        """
-        penalties = torch.zeros(solutions.size(0), device=self.device)
-        for i, solution in enumerate(solutions):
-            machine_jobs = [[], []]
-            makespans = [0, 0]
-            
-            for job_index, job_assignment in enumerate(solution):
-                machine = int(job_assignment)
-                job_key = job_index + 1
-                job = jobs[job_key]
-                machine_jobs[machine].append((job_key, job))
-            
-            for machine, assigned_jobs in enumerate(machine_jobs):
-                current_time = 0
-                for job_key, job in sorted(assigned_jobs, key=lambda x: (x[1]['deadline'], x[1]['release'])):
-                    if current_time < job['release']:
-                        current_time = job['release']
-                    current_time += job['duration']
-                    if current_time > job['deadline']:
-                        penalties[i] += 1  # Increment penalty for each violation
-        return penalties 
+        pass 
 
     @torch.no_grad()
     def assess_changes(self, solutions: torch.Tensor, fitnesses: torch.Tensor,
                        new_solutions: torch.Tensor, change_tolerance: int,
-                       last_improve: torch.Tensor, jobs: None, check_constraints: bool) -> int:
+                       last_improve: torch.Tensor, check_constraints: bool, penalty_mult: int) -> int:
         """
         Determines which changes to solutions are positive and neutral and should be kept, and 
         which changes are negative and should be discarded. Solutions and fitnesses are modified
@@ -135,13 +98,7 @@ class OptimHandler(ABC):
         """
         active = last_improve <= change_tolerance
         new_fitnesses = torch.full(fitnesses.shape, -float('inf'), device=self.device)
-
-        # Apply constraint penalties
-        if check_constraints:
-            penalties = self.check_constraints(new_solutions[active], jobs)
-            new_fitnesses[active] = self.problem.fitness(new_solutions[active]) - (5*penalties)
-        else:
-            new_fitnesses[active] = self.problem.fitness(new_solutions[active])
+        new_fitnesses[active] = self.problem.fitness(new_solutions[active], check_constraints, penalty_mult)
         evaluations = new_solutions[active].shape[0]  
 
         last_improve[new_fitnesses <= fitnesses] += 1
@@ -155,7 +112,7 @@ class OptimHandler(ABC):
 
     @torch.no_grad() 
     def hillclimb(self, solutions: torch.Tensor, fitnesses: torch.Tensor,
-                  change_tolerance: int, jobs: None, check_constraints=False) -> tuple[torch.Tensor, torch.Tensor, int, bool]:
+                  change_tolerance: int, check_constraints: bool, penalty_mult: int) -> tuple[torch.Tensor, torch.Tensor, int, bool]:
         """
         Locally optimises solutions using a bit-substitution hill climber.
 
@@ -185,7 +142,7 @@ class OptimHandler(ABC):
             new_solutions[torch.arange(new_solutions.shape[0]), i] *= -1
 
             evaluations = self.assess_changes(solutions, fitnesses, new_solutions, change_tolerance,
-                                              last_improve, jobs, check_constraints)
+                                              last_improve, check_constraints, penalty_mult)
             total_evals += evaluations
             if torch.any(fitnesses == self.problem.max_fitness): 
                 return (solutions, fitnesses, total_evals, True)
@@ -195,7 +152,7 @@ class OptimHandler(ABC):
     @torch.no_grad()
     def assess_changes_descent(self, solutions: torch.Tensor, fitnesses: torch.Tensor,
                                new_solutions: torch.Tensor, change_tolerance: int,
-                               last_improve: torch.Tensor, jobs: None, check_constraints: bool) -> int:
+                               last_improve: torch.Tensor, check_constraints: bool, penalty_mult: int) -> int:
         """
         Determines which changes to solutions are negative and neutral and should be kept, and 
         which changes are positive and should be discarded. Solutions and fitnesses are modified
@@ -224,13 +181,7 @@ class OptimHandler(ABC):
         """
         active = last_improve <= change_tolerance
         new_fitnesses = torch.full(fitnesses.shape, float('inf'), device=self.device)
-        
-        # Apply constraint penalties
-        if check_constraints:
-            penalties = self.check_constraints(new_solutions[active], jobs)
-            new_fitnesses[active] = self.problem.fitness(new_solutions[active]) + (5*penalties)
-        else:
-            new_fitnesses[active] = self.problem.fitness(new_solutions[active])
+        new_fitnesses[active] = self.problem.fitness(new_solutions[active], check_constraints, penalty_mult)
         evaluations = new_solutions[active].shape[0]  
 
         last_improve[new_fitnesses >= fitnesses] += 1
@@ -244,7 +195,7 @@ class OptimHandler(ABC):
 
     @torch.no_grad() 
     def hilldescent(self, solutions: torch.Tensor, fitnesses: torch.Tensor,
-                    change_tolerance: int, jobs: None, check_constraints=False) -> tuple[torch.Tensor, torch.Tensor, int, bool]:
+                    change_tolerance: int, check_constraints: bool, penalty_mult: int) -> tuple[torch.Tensor, torch.Tensor, int, bool]:
         """
         Locally optimises solutions using a bit-substitution hill descender.
 
@@ -274,14 +225,14 @@ class OptimHandler(ABC):
             new_solutions[torch.arange(new_solutions.shape[0]), i] *= -1
 
             evaluations = self.assess_changes_descent(solutions, fitnesses, new_solutions, change_tolerance,
-                                                      last_improve, jobs, check_constraints)
+                                                      last_improve, check_constraints, penalty_mult)
             total_evals += evaluations
             if torch.any(fitnesses == self.problem.max_fitness): 
                 return (solutions, fitnesses, total_evals, True)
             if torch.all(last_improve > change_tolerance):
                 return (solutions, fitnesses, total_evals, False)
 
-    def generate_population(self, pop_size: int) -> tuple[torch.Tensor, torch.Tensor]:
+    def generate_population(self, pop_size: int, check_constraints: bool, penalty_mult: int) -> tuple[torch.Tensor, torch.Tensor]:
         """
         Generates a random population to the given problem.
 
@@ -294,7 +245,7 @@ class OptimHandler(ABC):
             fitnesses.
         """
         population = self.problem.random_solution(pop_size)
-        fitnesses = self.problem.fitness(population)
+        fitnesses = self.problem.fitness(population, check_constraints, penalty_mult)
         return population, fitnesses
 
     def print_statistics(self, fitnesses: torch.tensor):
