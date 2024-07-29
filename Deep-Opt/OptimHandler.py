@@ -69,7 +69,7 @@ class OptimHandler(ABC):
     @torch.no_grad()
     def assess_changes(self, solutions: torch.Tensor, fitnesses: torch.Tensor,
                        new_solutions: torch.Tensor, change_tolerance: int,
-                       last_improve: torch.Tensor, check_constraints: bool, penalty_mult: int) -> int:
+                       last_improve: torch.Tensor, check_constraints: str, penalty_mult: int) -> int:
         """
         Determines which changes to solutions are positive and neutral and should be kept, and 
         which changes are negative and should be discarded. Solutions and fitnesses are modified
@@ -112,7 +112,7 @@ class OptimHandler(ABC):
 
     @torch.no_grad() 
     def hillclimb(self, solutions: torch.Tensor, fitnesses: torch.Tensor,
-                  change_tolerance: int, check_constraints: bool, penalty_mult: int) -> tuple[torch.Tensor, torch.Tensor, int, bool]:
+                  change_tolerance: int, check_constraints: str, penalty_mult: int) -> tuple[torch.Tensor, torch.Tensor, int, bool]:
         """
         Locally optimises solutions using a bit-substitution hill climber.
 
@@ -152,7 +152,7 @@ class OptimHandler(ABC):
     @torch.no_grad()
     def assess_changes_descent(self, solutions: torch.Tensor, fitnesses: torch.Tensor,
                                new_solutions: torch.Tensor, change_tolerance: int,
-                               last_improve: torch.Tensor, check_constraints: bool, penalty_mult: int) -> int:
+                               last_improve: torch.Tensor, check_constraints: str, penalty_mult: int) -> int:
         """
         Determines which changes to solutions are negative and neutral and should be kept, and 
         which changes are positive and should be discarded. Solutions and fitnesses are modified
@@ -195,7 +195,7 @@ class OptimHandler(ABC):
 
     @torch.no_grad() 
     def hilldescent(self, solutions: torch.Tensor, fitnesses: torch.Tensor,
-                    change_tolerance: int, check_constraints: bool, penalty_mult: int) -> tuple[torch.Tensor, torch.Tensor, int, bool]:
+                    change_tolerance: int, check_constraints: str, penalty_mult: int) -> tuple[torch.Tensor, torch.Tensor, int, bool]:
         """
         Locally optimises solutions using a bit-substitution hill descender.
 
@@ -232,7 +232,7 @@ class OptimHandler(ABC):
             if torch.all(last_improve > change_tolerance):
                 return (solutions, fitnesses, total_evals, False)
 
-    def generate_population(self, pop_size: int, check_constraints: bool, penalty_mult: int) -> tuple[torch.Tensor, torch.Tensor]:
+    def generate_population(self, pop_size: int, check_constraints: str, penalty_mult: int) -> tuple[torch.Tensor, torch.Tensor]:
         """
         Generates a random population to the given problem.
 

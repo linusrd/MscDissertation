@@ -63,7 +63,7 @@ class OptimAEHandler(OptimHandler):
     @torch.no_grad()
     def optimise_solutions(self, solutions: torch.Tensor, fitnesses: torch.Tensor,
                            change_tolerance : int, encode: bool=False,
-                           repair_solutions: bool=False, deepest_only: bool=False, check_constraints: bool=False, penalty_mult: int=5) -> tuple[torch.Tensor, torch.Tensor, int, bool]:
+                           repair_solutions: bool=False, deepest_only: bool=False, check_constraints: str=None, penalty_mult: int=5) -> tuple[torch.Tensor, torch.Tensor, int, bool]:
         """
         Optimises the solutions using Model-Informed Variation. 
 
@@ -116,7 +116,7 @@ class OptimAEHandler(OptimHandler):
     @torch.no_grad()
     def optimise_solutions_min(self, solutions: torch.Tensor, fitnesses: torch.Tensor,
                            change_tolerance : int, encode: bool=False,
-                           repair_solutions: bool=False, deepest_only: bool=False, check_constraints: bool=False, penalty_mult: int=5) -> tuple[torch.Tensor, torch.Tensor, int, bool]:
+                           repair_solutions: bool=False, deepest_only: bool=False, check_constraints: str=None, penalty_mult: int=5) -> tuple[torch.Tensor, torch.Tensor, int, bool]:
         """
         Optimises the solutions using Model-Informed Variation. 
 
