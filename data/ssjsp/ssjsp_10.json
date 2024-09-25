@@ -1,0 +1,62 @@
+{
+    "1": {
+        "duration": 20,
+        "release": 0,
+        "deadline": 50,
+        "machine": 0
+    },
+    "2": {
+        "duration": 20,
+        "release": 0,
+        "deadline": 50,
+        "machine": 0
+    },
+    "3": {
+        "duration": 4,
+        "release": 40,
+        "deadline": 50,
+        "machine": 0
+    },
+    "4": {
+        "duration": 3,
+        "release": 40,
+        "deadline": 50,
+        "machine": 0
+    },
+    "5": {
+        "duration": 3,
+        "release": 40,
+        "deadline": 50,
+        "machine": 0
+    },
+    "6": {
+        "duration": 19,
+        "release": 0,
+        "deadline": 41,
+        "machine": 1
+    },
+    "7": {
+        "duration": 16,
+        "release": 10,
+        "deadline": 50,
+        "machine": 1
+    },
+    "8": {
+        "duration": 5,
+        "release": 0,
+        "deadline": 46,
+        "machine": 1
+    },
+    "9": {
+        "duration": 5,
+        "release": 40,
+        "deadline": 50,
+        "machine": 1
+    },
+    "10": {
+        "duration": 5,
+        "release": 0,
+        "deadline": 37,
+        "machine": 1
+    }
+}

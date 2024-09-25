@@ -1,0 +1,302 @@
+{
+    "1": {
+        "duration": 13,
+        "release": 0,
+        "deadline": 100
+    },
+    "2": {
+        "duration": 23,
+        "release": 5,
+        "deadline": 100
+    },
+    "3": {
+        "duration": 13,
+        "release": 20,
+        "deadline": 100
+    },
+    "4": {
+        "duration": 13,
+        "release": 30,
+        "deadline": 100
+    },
+    "5": {
+        "duration": 13,
+        "release": 35,
+        "deadline": 100
+    },
+    "6": {
+        "duration": 13,
+        "release": 0,
+        "deadline": 100
+    },
+    "7": {
+        "duration": 13,
+        "release": 130,
+        "deadline": 150
+    },
+    "8": {
+        "duration": 13,
+        "release": 0,
+        "deadline": 150
+    },
+    "9": {
+        "duration": 23,
+        "release": 0,
+        "deadline": 150
+    },
+    "10": {
+        "duration": 13,
+        "release": 0,
+        "deadline": 150
+    },
+    "11": {
+        "duration": 10,
+        "release": 0,
+        "deadline": 100
+    },
+    "12": {
+        "duration": 10,
+        "release": 20,
+        "deadline": 100
+    },
+    "13": {
+        "duration": 10,
+        "release": 0,
+        "deadline": 100
+    },
+    "14": {
+        "duration": 20,
+        "release": 0,
+        "deadline": 100
+    },
+    "15": {
+        "duration": 25,
+        "release": 0,
+        "deadline": 100
+    },
+    "16": {
+        "duration": 20,
+        "release": 100,
+        "deadline": 120
+    },
+    "17": {
+        "duration": 10,
+        "release": 0,
+        "deadline": 100
+    },
+    "18": {
+        "duration": 15,
+        "release": 0,
+        "deadline": 150
+    },
+    "19": {
+        "duration": 10,
+        "release": 0,
+        "deadline": 150
+    },
+    "20": {
+        "duration": 20,
+        "release": 0,
+        "deadline": 150
+    },
+    "21": {
+        "duration": 13,
+        "release": 40,
+        "deadline": 140
+    },
+    "22": {
+        "duration": 23,
+        "release": 45,
+        "deadline": 140
+    },
+    "23": {
+        "duration": 13,
+        "release": 60,
+        "deadline": 140
+    },
+    "24": {
+        "duration": 13,
+        "release": 70,
+        "deadline": 140
+    },
+    "25": {
+        "duration": 13,
+        "release": 75,
+        "deadline": 140
+    },
+    "26": {
+        "duration": 13,
+        "release": 40,
+        "deadline": 140
+    },
+    "27": {
+        "duration": 13,
+        "release": 170,
+        "deadline": 190
+    },
+    "28": {
+        "duration": 13,
+        "release": 40,
+        "deadline": 190
+    },
+    "29": {
+        "duration": 23,
+        "release": 40,
+        "deadline": 190
+    },
+    "30": {
+        "duration": 13,
+        "release": 40,
+        "deadline": 190
+    },
+    "31": {
+        "duration": 10,
+        "release": 40,
+        "deadline": 140
+    },
+    "32": {
+        "duration": 10,
+        "release": 60,
+        "deadline": 140
+    },
+    "33": {
+        "duration": 10,
+        "release": 40,
+        "deadline": 140
+    },
+    "34": {
+        "duration": 20,
+        "release": 40,
+        "deadline": 140
+    },
+    "35": {
+        "duration": 25,
+        "release": 40,
+        "deadline": 140
+    },
+    "36": {
+        "duration": 20,
+        "release": 140,
+        "deadline": 160
+    },
+    "37": {
+        "duration": 10,
+        "release": 40,
+        "deadline": 140
+    },
+    "38": {
+        "duration": 15,
+        "release": 40,
+        "deadline": 190
+    },
+    "39": {
+        "duration": 10,
+        "release": 40,
+        "deadline": 190
+    },
+    "40": {
+        "duration": 20,
+        "release": 40,
+        "deadline": 190
+    },
+    "41": {
+        "duration": 13,
+        "release": 80,
+        "deadline": 180
+    },
+    "42": {
+        "duration": 23,
+        "release": 85,
+        "deadline": 180
+    },
+    "43": {
+        "duration": 13,
+        "release": 100,
+        "deadline": 180
+    },
+    "44": {
+        "duration": 13,
+        "release": 110,
+        "deadline": 180
+    },
+    "45": {
+        "duration": 13,
+        "release": 115,
+        "deadline": 180
+    },
+    "46": {
+        "duration": 13,
+        "release": 80,
+        "deadline": 180
+    },
+    "47": {
+        "duration": 13,
+        "release": 210,
+        "deadline": 230
+    },
+    "48": {
+        "duration": 13,
+        "release": 80,
+        "deadline": 230
+    },
+    "49": {
+        "duration": 23,
+        "release": 80,
+        "deadline": 230
+    },
+    "50": {
+        "duration": 13,
+        "release": 80,
+        "deadline": 230
+    },
+    "51": {
+        "duration": 10,
+        "release": 80,
+        "deadline": 180
+    },
+    "52": {
+        "duration": 10,
+        "release": 100,
+        "deadline": 180
+    },
+    "53": {
+        "duration": 10,
+        "release": 80,
+        "deadline": 180
+    },
+    "54": {
+        "duration": 20,
+        "release": 80,
+        "deadline": 180
+    },
+    "55": {
+        "duration": 25,
+        "release": 80,
+        "deadline": 180
+    },
+    "56": {
+        "duration": 20,
+        "release": 180,
+        "deadline": 200
+    },
+    "57": {
+        "duration": 10,
+        "release": 80,
+        "deadline": 180
+    },
+    "58": {
+        "duration": 15,
+        "release": 80,
+        "deadline": 230
+    },
+    "59": {
+        "duration": 10,
+        "release": 80,
+        "deadline": 230
+    },
+    "60": {
+        "duration": 20,
+        "release": 80,
+        "deadline": 230
+    }
+}

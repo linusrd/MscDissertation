@@ -1,0 +1,26 @@
+{
+    "1": {
+        "duration": 19,
+        "release": 0,
+        "deadline": 20,
+        "machine": 0
+    },
+    "2": {
+        "duration": 1,
+        "release": 0,
+        "deadline": 20,
+        "machine": 0
+    },
+    "3": {
+        "duration": 18,
+        "release": 0,
+        "deadline": 20,
+        "machine": 1
+    },
+    "4": {
+        "duration": 2,
+        "release": 0,
+        "deadline": 20,
+        "machine": 1
+    }
+}

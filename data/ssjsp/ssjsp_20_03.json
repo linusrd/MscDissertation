@@ -1,0 +1,122 @@
+{
+    "1": {
+        "duration": 20,
+        "release": 0,
+        "deadline": 26,
+        "machine": 0
+    },
+    "2": {
+        "duration": 20,
+        "release": 14,
+        "deadline": 44,
+        "machine": 0
+    },
+    "3": {
+        "duration": 20,
+        "release": 28,
+        "deadline": 62,
+        "machine": 0
+    },
+    "4": {
+        "duration": 20,
+        "release": 42,
+        "deadline": 80,
+        "machine": 0
+    },
+    "5": {
+        "duration": 15,
+        "release": 56,
+        "deadline": 92,
+        "machine": 0
+    },
+    "6": {
+        "duration": 1,
+        "release": 66,
+        "deadline": 87,
+        "machine": 0
+    },
+    "7": {
+        "duration": 1,
+        "release": 67,
+        "deadline": 88,
+        "machine": 0
+    },
+    "8": {
+        "duration": 1,
+        "release": 67,
+        "deadline": 89,
+        "machine": 0
+    },
+    "9": {
+        "duration": 1,
+        "release": 68,
+        "deadline": 90,
+        "machine": 0
+    },
+    "10": {
+        "duration": 1,
+        "release": 69,
+        "deadline": 91,
+        "machine": 0
+    },
+    "11": {
+        "duration": 19,
+        "release": 0,
+        "deadline": 24,
+        "machine": 1
+    },
+    "12": {
+        "duration": 19,
+        "release": 13,
+        "deadline": 41,
+        "machine": 1
+    },
+    "13": {
+        "duration": 19,
+        "release": 26,
+        "deadline": 59,
+        "machine": 1
+    },
+    "14": {
+        "duration": 19,
+        "release": 39,
+        "deadline": 76,
+        "machine": 1
+    },
+    "15": {
+        "duration": 10,
+        "release": 53,
+        "deadline": 82,
+        "machine": 1
+    },
+    "16": {
+        "duration": 4,
+        "release": 60,
+        "deadline": 83,
+        "machine": 1
+    },
+    "17": {
+        "duration": 3,
+        "release": 63,
+        "deadline": 85,
+        "machine": 1
+    },
+    "18": {
+        "duration": 3,
+        "release": 65,
+        "deadline": 88,
+        "machine": 1
+    },
+    "19": {
+        "duration": 2,
+        "release": 67,
+        "deadline": 89,
+        "machine": 1
+    },
+    "20": {
+        "duration": 2,
+        "release": 68,
+        "deadline": 91,
+        "machine": 1
+    }
+}
