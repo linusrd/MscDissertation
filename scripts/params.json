@@ -1,0 +1,17 @@
+{
+    "change_tolerance": 100,
+    "problem_size": 100,
+    "pop_size": 1000,
+    "dropout_prob": 0.2,
+    "l1_coef": 0.0001,
+    "l2_coef": 0.0001,
+    "learning_rate": 0.002,
+    "max_depth": 6,
+    "compression_ratio": 0.8,
+    "problem_instance_id": 12,
+    "deepest_only": true,
+    "encode": true,
+    "repair_solutions": true,
+    "patience": 3,
+    "delta_mean_population": 0.1
+}
