@@ -58,6 +58,7 @@ The `notebooks` directory contains Jupyter Notebooks that:
 This involves generating or preparing the scheduling problems to be solved:
 - `notebooks/generate_sched_problem.ipynb`: Used to generate scheduling problem instances.
 - `notebooks/check_constraints.ipynb`: Used to brute force check the feasibility of constraints.
+- `notebooks/qubo_custom_prob.ipynb`: Used to convert the problem instance to qubo after being generated.
 
 ##### ***Running the Solvers***
 This involves executing the deep optimization framework and other methods to solve the scheduling problems:
